@@ -1,0 +1,14 @@
+<adapter-config name="dbReference_QueryJobsAcco" adapter="db" wsdlLocation="../WSDLs/dbReference_QueryJobsAcco.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+  
+  <connection-factory UIConnectionName="SupplierDB" location="eis/DB/SupplierDB"/>
+  <endpoint-interaction portType="dbReference_QueryJobsAcco_ptt" operation="dbReference_QueryJobsAccoSelect">
+    <interaction-spec className="oracle.tip.adapter.db.DBReadInteractionSpec">
+      <property name="DescriptorName" value="dbReference_QueryJobsAcco.Cachejobsacco"/>
+      <property name="QueryName" value="dbReference_QueryJobsAccoSelect"/>
+      <property name="MappingsMetaDataURL" value="dbReference_QueryJobsAcco-or-mappings.xml"/>
+      <property name="ReturnSingleResultSet" value="false"/>
+      <property name="GetActiveUnitOfWork" value="false"/>
+    </interaction-spec>
+  </endpoint-interaction>
+
+</adapter-config>

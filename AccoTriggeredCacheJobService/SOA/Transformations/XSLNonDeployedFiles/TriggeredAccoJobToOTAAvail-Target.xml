@@ -1,0 +1,48 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<tns:AccoBusinessServiceRQ xmlns:ns2="http://www.opentravel.org/OTA/2003/05" xmlns:tns="http://www.coxandkings.com/integ/suppl/acco">
+   <tns:RequestHeader>
+      <comm:SupplierCredentialsList xmlns:comm="http://www.coxandkings.com/integ/suppl/common">
+         <SupplierCredentials xmlns="http://www.coxandkings.com/integ/suppl/common">
+      <SupplierID marketType="marketType1">string2</SupplierID>
+      <SearchType>SearchType3</SearchType>
+      <Credentials>
+         <Credential name="name4" isEncrypted="true">string5</Credential>
+         <Credential name="name6" isEncrypted="true">string7</Credential>
+         <Credential name="name8" isEncrypted="true">string9</Credential>
+         <OperationURLs>
+            <OperationURL>string10</OperationURL>
+            <OperationURL>string11</OperationURL>
+            <OperationURL>string12</OperationURL>
+         </OperationURLs>
+      </Credentials>
+   </SupplierCredentials>
+      </comm:SupplierCredentialsList>
+   </tns:RequestHeader>
+   <tns:RequestBody>
+      <ns2:OTA_HotelAvailRQ RequestedCurrency="INR" Target="Test" Version="1.000">
+         <ns2:AvailRequestSegments>
+            <ns2:AvailRequestSegment>
+               <ns2:HotelSearchCriteria>
+                  <ns2:Criterion>
+                     <ns2:RefPoint CountryCode="IN"/>
+                     <ns2:HotelRef HotelCityCode="BLR"/>
+                     <ns2:StayDateRange Start="2016-08-12" End="2016-08-15"/>
+                     <ns2:RoomStayCandidates>
+                        <ns2:RoomStayCandidate>
+                           <ns2:GuestCounts>
+                              <ns2:GuestCount AgeQualifyingCode="10" Count="2"/>
+                           </ns2:GuestCounts>
+                        </ns2:RoomStayCandidate>
+                        <ns2:RoomStayCandidate>
+                           <ns2:GuestCounts>
+                              <ns2:GuestCount AgeQualifyingCode="10" Count="1"/>
+                           </ns2:GuestCounts>
+                        </ns2:RoomStayCandidate>
+                     </ns2:RoomStayCandidates>
+                  </ns2:Criterion>
+               </ns2:HotelSearchCriteria>
+            </ns2:AvailRequestSegment>
+         </ns2:AvailRequestSegments>
+      </ns2:OTA_HotelAvailRQ>
+   </tns:RequestBody>
+</tns:AccoBusinessServiceRQ>

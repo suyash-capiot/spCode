@@ -1,0 +1,14 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+    
+     targetNamespace="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:ns1="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService"
+     xmlns:ns2="http://schemas.oracle.com/bpel/extension"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+    <wsdl:import namespace="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService" location="oramds:/apps/supplier/Accommodation/common/WSDLs/AccoBusinessAsyncService.wsdl"/>
+    <wsdl:import namespace="http://schemas.oracle.com/bpel/extension" location="../WSDLs/RuntimeFault.wsdl"/>
+</wsdl:definitions>

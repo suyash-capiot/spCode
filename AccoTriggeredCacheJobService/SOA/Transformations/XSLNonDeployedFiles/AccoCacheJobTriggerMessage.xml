@@ -1,0 +1,10 @@
+<ns0:AccoCacheJobTriggerMessage xmlns:ns0="http://www.coxandkings.com/integ/suppl/cache/trigger">
+	<ns0:SupplierID>INDIGO</ns0:SupplierID>
+	<ns0:CredentialName>B2C</ns0:CredentialName>
+	<ns0:CityCode>BLR</ns0:CityCode>
+	<ns0:JobSequence>100024</ns0:JobSequence>
+	<ns0:Rooms>2</ns0:Rooms>
+	<ns0:Guests>3</ns0:Guests>
+	<ns0:StartDate>2016-08-12</ns0:StartDate>
+	<ns0:EndDate>2016-08-15</ns0:EndDate>
+</ns0:AccoCacheJobTriggerMessage>

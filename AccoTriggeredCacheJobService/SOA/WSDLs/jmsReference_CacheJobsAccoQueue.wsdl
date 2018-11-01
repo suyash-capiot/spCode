@@ -1,0 +1,29 @@
+<wsdl:definitions
+     name="jmsReference_CacheJobsAccoQueue"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/jms/CacheJobsApp/AccoTriggeredCacheJobService/jmsReference_CacheJobsAccoQueue"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/jms/CacheJobsApp/AccoTriggeredCacheJobService/jmsReference_CacheJobsAccoQueue"
+     xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/"
+     xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:pc="http://xmlns.oracle.com/pcbpel/"
+     xmlns:imp1="http://www.coxandkings.com/integ/suppl/cache/trigger"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+  <plt:partnerLinkType name="TriggerAccoCacheJob_plt" >
+    <plt:role name="TriggerAccoCacheJob_role" >
+      <plt:portType name="tns:TriggerAccoCacheJob_ptt" />
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" >
+        <import namespace="http://www.coxandkings.com/integ/suppl/cache/trigger" schemaLocation="../Schemas/AccoCacheJobsTriggerMessage.xsd" />
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="TriggerAccoCacheJob_msg">
+        <wsdl:part name="body" element="imp1:AccoCacheJobTriggerMessage"/>
+    </wsdl:message>
+    <wsdl:portType name="TriggerAccoCacheJob_ptt">
+        <wsdl:operation name="TriggerAccoCacheJob">
+            <wsdl:input message="tns:TriggerAccoCacheJob_msg"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

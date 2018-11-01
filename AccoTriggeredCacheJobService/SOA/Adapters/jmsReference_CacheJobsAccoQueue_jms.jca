@@ -1,0 +1,12 @@
+<adapter-config name="jmsReference_CacheJobsAccoQueue" adapter="jms" wsdlLocation="../WSDLs/jmsReference_CacheJobsAccoQueue.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+  
+  <connection-factory UIConnectionName="IntegratedWebLogicServer" location="eis/wls/Queue" UIJmsProvider="WLSJMS"/>
+  <endpoint-activation portType="TriggerAccoCacheJob_ptt" operation="TriggerAccoCacheJob">
+    <activation-spec className="oracle.tip.adapter.jms.inbound.JmsConsumeActivationSpec">
+      <property name="DestinationName" value="jms/tlgx/CacheJobsAcco"/>
+      <property name="UseMessageListener" value="false"/>
+      <property name="PayloadType" value="TextMessage"/>
+    </activation-spec>
+  </endpoint-activation>
+
+</adapter-config>

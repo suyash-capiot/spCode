@@ -1,0 +1,40 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_QueryJobsAcco" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_QueryJobsAcco" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="CachejobsaccoCollection" type="CachejobsaccoCollection"/>
+   <xs:complexType name="CachejobsaccoCollection">
+      <xs:sequence>
+         <xs:element name="Cachejobsacco" type="Cachejobsacco" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="Cachejobsacco">
+      <xs:sequence>
+         <xs:element name="suppid" type="string20"/>
+         <xs:element name="credname" type="string50"/>
+         <xs:element name="countrycode" type="string20" minOccurs="0"/>
+         <xs:element name="citycode" type="string20"/>
+         <xs:element name="jobseq" type="xs:decimal"/>
+         <xs:element name="rooms" type="xs:decimal" minOccurs="0"/>
+         <xs:element name="adultguests" type="xs:decimal" minOccurs="0"/>
+         <xs:element name="childguests" type="xs:decimal" minOccurs="0"/>
+         <xs:element name="startdate" type="xs:dateTime" minOccurs="0"/>
+         <xs:element name="enddate" type="xs:dateTime" minOccurs="0"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="dbReference_QueryJobsAccoSelect_JobSeq_RowCountInputParameters" type="dbReference_QueryJobsAccoSelect_JobSeq_RowCount"/>
+   <xs:complexType name="dbReference_QueryJobsAccoSelect_JobSeq_RowCount">
+      <xs:sequence>
+         <xs:element name="JobSeq" type="xs:string" minOccurs="1" maxOccurs="1"/>
+         <xs:element name="RowCount" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="string20">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="20"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="string50">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="50"/>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

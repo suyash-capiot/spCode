@@ -1,0 +1,28 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+     name="CacheJobsTriggerService"
+     targetNamespace="http://www.coxandkings.com/integ/suppl/cache/trigger"
+     xmlns:tns="http://www.coxandkings.com/integ/suppl/cache/trigger"
+     xmlns:inp1="http://xmlns.oracle.com/singleString"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+    >
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+            <xsd:element name="singleString" type="xsd:string" />
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="requestMessage">
+        <wsdl:part name="inputPart" element="singleString"/>
+    </wsdl:message>
+    <wsdl:portType name="AccoCacheJobsTriggerService_pt">
+        <wsdl:operation name="execute">
+            <wsdl:input message="tns:requestMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <partnerLinkType name="AccoCacheJobsTriggerService" xmlns="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+        <role name="AccoCacheJobsTriggerServiceProvider">
+            <portType name="tns:AccoCacheJobsTriggerService_pt"/>
+        </role>
+    </partnerLinkType>
+</wsdl:definitions>

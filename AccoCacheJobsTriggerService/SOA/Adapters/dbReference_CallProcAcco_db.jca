@@ -1,0 +1,12 @@
+<adapter-config name="dbReference_CallProcAcco" adapter="db" wsdlLocation="../WSDLs/dbReference_CallProcAcco.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+  
+  <connection-factory UIConnectionName="SupplierDB" location="eis/DB/SupplierDB"/>
+  <endpoint-interaction portType="dbReference_CallProcAcco_ptt" operation="dbReference_CallProcAcco">
+    <interaction-spec className="oracle.tip.adapter.db.DBStoredProcedureInteractionSpec">
+      <property name="SchemaName" value="C##TRAVELOGIX"/>
+      <property name="ProcedureName" value="GENERATECACHEJOBSACCO"/>
+      <property name="GetActiveUnitOfWork" value="false"/>
+    </interaction-spec>
+  </endpoint-interaction>
+
+</adapter-config>

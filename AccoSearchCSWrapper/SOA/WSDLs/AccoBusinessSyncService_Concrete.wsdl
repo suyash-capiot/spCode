@@ -1,0 +1,16 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+     name="AccoBusinessSyncService_Concrete"
+     targetNamespace="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessSyncService"
+     xmlns:tns="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessSyncService"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    >
+    <wsdl:import namespace="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessSyncService" location="oramds:/apps/supplier/Accommodation/common/WSDLs/AccoBusinessSyncService.wsdl"/>
+    <wsdl:service name="AccoBusinessSyncService_Client_EP">
+        <wsdl:port name="AccoBusinessSyncService_pt" binding="tns:AccoBusinessSyncServiceOP_bind">
+            <soap:address location="http://localhost:7101/soa-infra/services/default/AccoBusinessAsyncInterfaceService/AccoBusinessSyncInterfaceService_Client_EP"/>
+        </wsdl:port>
+    </wsdl:service>
+    
+</wsdl:definitions>

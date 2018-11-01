@@ -1,0 +1,17 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<wsdl:definitions
+     name="AccoBusinessAsyncService_Concrete"
+     targetNamespace="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService"
+     xmlns:tns="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService"
+     xmlns:inp1="http://www.coxandkings.com/integ/suppl/acco"
+     xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    >
+    <wsdl:import namespace="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService" location="oramds:/apps/supplier/Accommodation/common/WSDLs/AccoBusinessAsyncService.wsdl"/>
+    <wsdl:service name="AccoBusinessAsyncInterfaceService_Client_ep">
+        <wsdl:port name="AccoBusinessAsyncService_pt" binding="tns:AccoBusinessAsyncService_pttSOAP">
+            <soap:address location="http://localhost:7101/soa-infra/services/default/AccoBusinessAsyncInterfaceService/AccoBusinessAsyncInterfaceService_Client_ep"/>
+        </wsdl:port>
+    </wsdl:service>
+ </wsdl:definitions>

@@ -1,0 +1,49 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+   <entry key="root_descriptor_alias">CACHEJOBSACCO</entry>
+   <entry key="CACHEJOBSACCO.STARTDATE:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO:db_column_0">SUPPID</entry>
+   <entry key="CACHEJOBSACCO.ADULTGUESTS:db_column_precision">38</entry>
+   <entry key="CACHEJOBSACCO.ENDDATE:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.ADULTGUESTS:db_column_scale">0</entry>
+   <entry key="CACHEJOBSACCO.CITYCODE:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.COUNTRYCODE:db_column_type">VARCHAR2</entry>
+   <entry key="CACHEJOBSACCO.JOBSEQ:db_column_scale">0</entry>
+   <entry key="CACHEJOBSACCO.CHILDGUESTS:db_column_type">NUMBER</entry>
+   <entry key="CACHEJOBSACCO.ADULTGUESTS:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.CHILDGUESTS:db_column_precision">38</entry>
+   <entry key="CACHEJOBSACCO.JOBSEQ:db_column_precision">38</entry>
+   <entry key="CACHEJOBSACCO.COUNTRYCODE:db_column_size">20</entry>
+   <entry key="CACHEJOBSACCO.ROOMS:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.JOBSEQ:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.SUPPID:db_column_type">VARCHAR2</entry>
+   <entry key="CACHEJOBSACCO.STARTDATE:db_column_type">DATE</entry>
+   <entry key="CACHEJOBSACCO.COUNTRYCODE:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.CHILDGUESTS:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.CREDNAME:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.CHILDGUESTS:db_column_scale">0</entry>
+   <entry key="CACHEJOBSACCO.SUPPID:db_column_size">20</entry>
+   <entry key="return_single_result_set">false</entry>
+   <entry key="CACHEJOBSACCO.CREDNAME:db_column_type">VARCHAR2</entry>
+   <entry key="CACHEJOBSACCO.ENDDATE:db_column_type">DATE</entry>
+   <entry key="CACHEJOBSACCO.CITYCODE:db_column_type">VARCHAR2</entry>
+   <entry key="CACHEJOBSACCO.SUPPID:db_column_not_null">true</entry>
+   <entry key="CACHEJOBSACCO.JOBSEQ:db_column_type">NUMBER</entry>
+   <entry key="CACHEJOBSACCO.ROOMS:db_column_type">NUMBER</entry>
+   <entry key="CACHEJOBSACCO.CREDNAME:db_column_size">50</entry>
+   <entry key="CACHEJOBSACCO.CITYCODE:db_column_size">20</entry>
+   <entry key="CACHEJOBSACCO.ADULTGUESTS:db_column_type">NUMBER</entry>
+   <entry key="CACHEJOBSACCO:db_table_type">TABLE</entry>
+   <entry key="CACHEJOBSACCO:db_column_9">ENDDATE</entry>
+   <entry key="CACHEJOBSACCO.ROOMS:db_column_scale">0</entry>
+   <entry key="CACHEJOBSACCO:db_column_8">STARTDATE</entry>
+   <entry key="CACHEJOBSACCO:db_column_7">CHILDGUESTS</entry>
+   <entry key="CACHEJOBSACCO:db_column_6">ADULTGUESTS</entry>
+   <entry key="CACHEJOBSACCO.ROOMS:db_column_precision">38</entry>
+   <entry key="CACHEJOBSACCO:db_column_5">ROOMS</entry>
+   <entry key="CACHEJOBSACCO:db_column_4">JOBSEQ</entry>
+   <entry key="CACHEJOBSACCO:db_column_3">CITYCODE</entry>
+   <entry key="CACHEJOBSACCO:db_column_2">COUNTRYCODE</entry>
+   <entry key="CACHEJOBSACCO:db_column_1">CREDNAME</entry>
+</properties>

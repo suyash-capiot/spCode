@@ -1,0 +1,392 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Thu Apr 14 20:23:46 IST 2016
+  Author:  spatanka
+  Type: BPEL 2.0 Process
+  Purpose: Asynchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="AccoSupplierSearchCSWrapperBPEL"
+         targetNamespace="http://www.coxandkings.com/integ/suppl/acco/AccoSupplierSearchCSWrapper"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:client="http://www.coxandkings.com/integ/suppl/acco/AccoSupplierSearchCSWrapper"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:ns1="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ui="http://xmlns.oracle.com/soa/designer"
+         xmlns:ns2="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessSyncService"
+         xmlns:ns4="http://www.coxandkings.com/integ/suppl/common" xmlns:ns5="http://www.opentravel.org/OTA/2003/05"
+         xmlns:ns3="http://www.coxandkings.com/integ/suppl/acco"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <import namespace="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService"
+            location="../WSDLs/AccoSupplierSearchCSWrapper.wsdl"
+            importType="http://schemas.xmlsoap.org/wsdl/" ui:processWSDL="true"/>
+    <import namespace="http://schemas.oracle.com/bpel/extension" location="../WSDLs/RuntimeFault.wsdl"
+            importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.coxandkings.com/integ/suppl/acco/AccoBusinessAsyncService"
+            location="oramds:/apps/supplier/Accommodation/common/WSDLs/AccoBusinessAsyncService.wsdl"
+            importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="AccoSupplierSearchCSWrapper_Client" partnerLinkType="ns1:AccoBusinessAsyncService" myRole="AccoBusinessAsyncServiceProvider" partnerRole="AccoBusinessAsyncServiceCallback"/>
+        <partnerLink name="AccoSupplierSearchCS" partnerLinkType="ns2:AccoBusinessSyncService"
+                     partnerRole="AccoBusinessSyncServiceProvider"/>
+    </partnerLinks>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VARIABLES                                                        
+        List of messages and XML documents used within this BPEL process 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="ns1:requestMessage"/>
+
+        <!-- Reference to the message that will be sent back to the requester during callback -->
+        <variable name="outputVariable" messageType="ns1:callbackMessage"/>
+        <variable name="CallSupplierSearchCS_Input" messageType="ns2:requestMessage"/>
+        <variable name="CallSupplierSearchCS_Output" messageType="ns2:replyMessage"/>
+        <variable name="ServiceEPURI" type="xsd:string"/>
+        <variable name="AccoCacheKey" type="xsd:string"/>
+        <variable name="AccoCacheEntry" type="xsd:string"/>
+        <variable name="AccoCacheName" type="xsd:string"/>
+        <variable name="AccoCacheConfig" type="xsd:string"/>
+    </variables>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       ORCHESTRATION LOGIC                                               
+       Set of activities coordinating the flow of messages across the    
+       services integrated within this business process                  
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in AccoSupplierSearchCSWrapperBPEL.wsdl) -->
+        <receive name="receiveInput" partnerLink="AccoSupplierSearchCSWrapper_Client" portType="ns1:AccoBusinessAsyncService_ptt" operation="AccoBusinessAsyncServiceOP" variable="inputVariable" createInstance="yes"/>
+        <assign name="AssignAccoCacheKey">
+            <copy>
+                <from>concat($inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials/ns4:SupplierID, '|',$inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials/ns4:Credentials/@name, '|',$inputVariable.requestPart/ns3:RequestBody/ns5:OTA_HotelAvailRQ/ns5:AvailRequestSegments/ns5:AvailRequestSegment[1]/ns5:HotelSearchCriteria/ns5:Criterion/ns5:RefPoint/@CountryCode, '|',$inputVariable.requestPart/ns3:RequestBody/ns5:OTA_HotelAvailRQ/ns5:AvailRequestSegments/ns5:AvailRequestSegment[1]/ns5:HotelSearchCriteria/ns5:Criterion/ns5:HotelRef/@HotelCityCode, '|',$inputVariable.requestPart/ns3:RequestBody/ns5:OTA_HotelAvailRQ/ns5:AvailRequestSegments/ns5:AvailRequestSegment[1]/ns5:HotelSearchCriteria/ns5:Criterion/ns5:StayDateRange/@Start, '|',$inputVariable.requestPart/ns3:RequestBody/ns5:OTA_HotelAvailRQ/ns5:AvailRequestSegments/ns5:AvailRequestSegment[1]/ns5:HotelSearchCriteria/ns5:Criterion/ns5:StayDateRange/@End, '|',count($inputVariable.requestPart/ns3:RequestBody/ns5:OTA_HotelAvailRQ/ns5:AvailRequestSegments/ns5:AvailRequestSegment[1]/ns5:HotelSearchCriteria/ns5:Criterion/ns5:RoomStayCandidates/ns5:RoomStayCandidate), '|',sum($inputVariable.requestPart/ns3:RequestBody/ns5:OTA_HotelAvailRQ/ns5:AvailRequestSegments/ns5:AvailRequestSegment[1]/ns5:HotelSearchCriteria/ns5:Criterion/ns5:RoomStayCandidates/ns5:RoomStayCandidate/ns5:GuestCounts/ns5:GuestCount[@AgeQualifyingCode='10']/@Count), '|',sum($inputVariable.requestPart/ns3:RequestBody/ns5:OTA_HotelAvailRQ/ns5:AvailRequestSegments/ns5:AvailRequestSegment[1]/ns5:HotelSearchCriteria/ns5:Criterion/ns5:RoomStayCandidates/ns5:RoomStayCandidate/ns5:GuestCounts/ns5:GuestCount[@AgeQualifyingCode='8']/@Count), '|',sum($inputVariable.requestPart/ns3:RequestBody/ns5:OTA_HotelAvailRQ/ns5:AvailRequestSegments/ns5:AvailRequestSegment[1]/ns5:HotelSearchCriteria/ns5:Criterion/ns5:RoomStayCandidates/ns5:RoomStayCandidate/ns5:GuestCounts/ns5:GuestCount[@AgeQualifyingCode='7']/@Count))</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheKey</to>
+            </copy>
+            <copy>
+                <from>''</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheEntry</to>
+            </copy>
+            <copy>
+                <from>dvm:lookupValue('oramds:/apps/common/Configurations.dvm', 'Name', 'CacheNameAcco', 'Value', 'AccoCache')</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheName</to>
+            </copy>
+            <copy>
+                <from>dvm:lookupValue('oramds:/apps/common/Configurations.dvm', 'Name', 'CacheConfig', 'Value', 'AccoCache')</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheConfig</to>
+            </copy>
+        </assign>
+        <if name="IfFetchFromCache">
+            <documentation>
+                <![CDATA[From Cache]]>
+            </documentation>
+            <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"> $inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials/ns4:SearchType = '0' or $inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials/ns4:SearchType = '2'</condition>
+            <sequence name="Sequence1">
+                <extensionActivity>
+                    <bpelx:exec name="GetEntryFromCache">
+                        <![CDATA[System.out.println("========================= Entering Java Embedded Code CoherenceCacheGet =========================");   
+String cacheConfig = (String) getVariableData("AccoCacheConfig");   
+System.out.println("***** Value of cacheConfig=<" + cacheConfig + ">");  
+String cacheName = (String) getVariableData("AccoCacheName");   
+System.out.println("***** Value of cacheName=<" + cacheName + ">");   
+String cacheKey = (String) getVariableData("AccoCacheKey");   
+System.out.println("***** Value of cacheKey=<" + cacheKey + ">");   
+   
+String cacheValue = com.coxandkings.coherence.utils.CoherenceUtil.getFromCache(cacheConfig, cacheName, cacheKey); 
+ 
+setVariableData("AccoCacheEntry", cacheValue); 
+System.out.println("========================= Exiting Java Embedded Code CoherenceCacheGet =========================");]]>
+                    </bpelx:exec>
+                </extensionActivity>
+                <if name="IfEntryFound">
+                    <documentation>
+                        <![CDATA[Entry Found]]>
+                    </documentation>
+                    <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">string-length($AccoCacheEntry) &gt; 0</condition>
+                    <sequence name="Sequence3">
+                        <assign name="AssignCacheResult">
+                            <copy>
+                                <from>'SUCCESS'</from>
+                                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:Status</to>
+                            </copy>
+                            <copy>
+                                <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:UserID</from>
+                                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:UserID</to>
+                            </copy>
+                            <copy>
+                                <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:SessionID</from>
+                                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:SessionID</to>
+                            </copy>
+                            <copy>
+                                <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:TransactionID</from>
+                                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:TransactionID</to>
+                            </copy>
+                            <copy>
+                                <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials[1]/ns4:SupplierID</from>
+                                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns3:SupplierID</to>
+                            </copy>
+                            <copy>
+                                <from>oraext:parseXML($AccoCacheEntry)</from>
+                                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS</to>
+                            </copy>
+                        </assign>
+                        <invoke name="CallbackWithCacheRes"
+                                partnerLink="AccoSupplierSearchCSWrapper_Client"
+                                portType="ns1:AccoBusinessAsyncServiceCallback_ptt"
+                                operation="AccoBusinessAsyncServiceOPCallback" inputVariable="outputVariable"
+                                bpelx:invokeAsDetail="no"/>
+                        <exit name="ExitAfterCachedRes"/>
+                    </sequence>
+                    <else>
+                        <documentation>
+                            <![CDATA[Entry Not Found]]>
+                        </documentation>
+                        <if name="IfCacheOnlySearch">
+                            <documentation>
+                                <![CDATA[Yes]]>
+                            </documentation>
+                            <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials/ns4:SearchType = '2'</condition>
+                            <sequence name="Sequence2">
+                                <assign name="AssignEmptyRes">
+                                    <copy>
+                                        <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:UserID</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:UserID</to>
+                                    </copy>
+                                    <copy>
+                                        <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:SessionID</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:SessionID</to>
+                                    </copy>
+                                    <copy>
+                                        <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:TransactionID</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:TransactionID</to>
+                                    </copy>
+                                    <copy>
+                                        <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials[1]/ns4:SupplierID</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns3:SupplierID</to>
+                                    </copy>
+                                    <copy>
+                                        <from>'1.000'</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS/@Version</to>
+                                    </copy>
+                                </assign>
+                                <invoke name="CallbackClientEmptyRes"
+                                        partnerLink="AccoSupplierSearchCSWrapper_Client"
+                                        portType="ns1:AccoBusinessAsyncServiceCallback_ptt"
+                                        operation="AccoBusinessAsyncServiceOPCallback" inputVariable="outputVariable"
+                                        bpelx:invokeAsDetail="no"/>
+                                <exit name="ExitAfterEmptyRes"/>
+                            </sequence>
+                            <else>
+                                <documentation>
+                                    <![CDATA[No]]>
+                                </documentation>
+                                <empty name="ContinueToSupplierService"/>
+                            </else>
+                        </if>
+                    </else>
+                </if>
+            </sequence>
+            <else>
+                <documentation>
+                    <![CDATA[Not From Cache]]>
+                </documentation>
+                <empty name="DoNotFetchFromCache"/>
+            </else>
+        </if>
+        <assign name="AssignServiceEP">
+            <copy>
+                <from>dvm:lookupValue('oramds:/apps/supplier/Accommodation/common/SuppOpIntURI.dvm', 'Operation', 'AccoSearchCS', 'OpURI', 'NOT_FOUND', 'SupplierID', $inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials[1]/ns4:SupplierID)</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$ServiceEPURI</to>
+            </copy>
+        </assign>
+        <if name="CheckServiceEP">
+            <documentation>
+                <![CDATA[Not Found]]>
+            </documentation>
+            <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$ServiceEPURI = 'NOT_FOUND'</condition>
+            <assign name="AssignEPError">
+                <copy>
+                    <from>'ERROR'</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:Status</to>
+                </copy>
+                <copy>
+                    <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:UserID</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:UserID</to>
+                </copy>
+                <copy>
+                    <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:SessionID</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:SessionID</to>
+                </copy>
+                <copy>
+                    <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:TransactionID</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:TransactionID</to>
+                </copy>
+                <copy>
+                    <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials[1]/ns4:SupplierID</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns3:SupplierID</to>
+                </copy>
+                <copy>
+                    <from>'999.ERR'</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS/ns5:Errors/ns5:Error/@Type</to>
+                </copy>
+                <copy>
+                    <from>'EP_NOT_FOUND'</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS/ns5:Errors/ns5:Error/@ShortText</to>
+                </copy>
+                <copy>
+                    <from>'Service endpoint URL not found'</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS/ns5:Errors/ns5:Error</to>
+                </copy>
+            </assign>
+            <else>
+                <documentation>
+                    <![CDATA[Found]]>
+                </documentation>
+                <sequence>
+                    <scope name="CallCSScope">
+                        <faultHandlers>
+                            <catchAll>
+                                <assign name="AssignGenericError">
+                                    <copy>
+                                        <from>'ERROR'</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:Status</to>
+                                    </copy>
+                                    <copy>
+                                        <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:UserID</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:UserID</to>
+                                    </copy>
+                                    <copy>
+                                        <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:SessionID</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:SessionID</to>
+                                    </copy>
+                                    <copy>
+                                        <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:TransactionID</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:TransactionID</to>
+                                    </copy>
+                                    <copy>
+                                        <from>$inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials[1]/ns4:SupplierID</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns3:SupplierID</to>
+                                    </copy>
+                                    <copy>
+                                        <from>'999.ERR'</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS/ns5:Errors/ns5:Error/@Type</to>
+                                    </copy>
+                                    <copy>
+                                        <from>'ERROR'</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS/ns5:Errors/ns5:Error/@ShortText</to>
+                                    </copy>
+                                    <copy>
+                                        <from>ora:getFaultAsString()</from>
+                                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS/ns5:Errors/ns5:Error</to>
+                                    </copy>
+                                </assign>
+                            </catchAll>
+                        </faultHandlers>
+                        <sequence>
+                            <assign name="AssignSupplierCSInput">
+                                <copy>
+                                    <from>$inputVariable.requestPart/ns3:RequestHeader</from>
+                                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$CallSupplierSearchCS_Input.requestPart/ns3:RequestHeader</to>
+                                </copy>
+                                <copy>
+                                    <from>$inputVariable.requestPart/ns3:RequestBody</from>
+                                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$CallSupplierSearchCS_Input.requestPart/ns3:RequestBody</to>
+                                </copy>
+                            </assign>
+                            <invoke name="CallSupplierSearchCS" partnerLink="AccoSupplierSearchCS"
+                                    portType="ns2:AccoBusinessSyncService_ptt" operation="AccoBusinessSyncServiceOP"
+                                    inputVariable="CallSupplierSearchCS_Input"
+                                    outputVariable="CallSupplierSearchCS_Output" bpelx:invokeAsDetail="no">
+                                <bpelx:toProperties>
+                                    <bpelx:toProperty name="endpointURI">dvm:lookupValue('oramds:/apps/supplier/Accommodation/common/SuppOpIntURI.dvm', 'Operation', 'AccoSearchCS', 'OpURI', 'Not Found!', 'SupplierID', $inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials[1]/ns4:SupplierID)</bpelx:toProperty>
+                                </bpelx:toProperties>
+                            </invoke>
+                            <assign name="AssignOutput">
+                                <copy>
+                                    <from>$CallSupplierSearchCS_Output.replyPart/ns3:ResponseHeader</from>
+                                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader</to>
+                                </copy>
+                                <copy>
+                                    <from>$CallSupplierSearchCS_Output.replyPart/ns3:ResponseBody</from>
+                                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseBody</to>
+                                </copy>
+                            </assign>
+                        </sequence>
+                    </scope>
+                </sequence>
+            </else>
+        </if>
+        <!-- 
+          Asynchronous callback to the requester. (Note: the callback location and correlation id is transparently handled using WS-addressing.)
+        -->
+        <invoke name="callbackClient" partnerLink="AccoSupplierSearchCSWrapper_Client" portType="ns1:AccoBusinessAsyncServiceCallback_ptt" operation="AccoBusinessAsyncServiceOPCallback" inputVariable="outputVariable"
+                bpelx:invokeAsDetail="no"/>
+        <if name="IfNoErrorAndStoreResInCache">
+            <documentation>
+                <![CDATA[Store]]>
+            </documentation>
+            <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.callbackPart/ns3:ResponseHeader/ns4:Status != 'ERROR' and ($inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials/ns4:SearchType = '0' or $inputVariable.requestPart/ns3:RequestHeader/ns4:SupplierCredentialsList/ns4:SupplierCredentials/ns4:SearchType = '9')</condition>
+            <sequence name="Sequence4">
+                <assign name="AssignAccoCacheEntry">
+                    <copy>
+                        <from>oraext:get-content-as-string($outputVariable.callbackPart/ns3:ResponseBody/ns3:OTA_HotelAvailRSWrapper/ns5:OTA_HotelAvailRS)</from>
+                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheEntry</to>
+                    </copy>
+                </assign>
+                <extensionActivity>
+                    <bpelx:exec name="PutEntryInCache">
+                        <![CDATA[System.out.println("========================= Entering Java Embedded Code CoherenceCachePut =========================");     
+String cacheConfig = (String) getVariableData("AccoCacheConfig");     
+System.out.println("***** Value of cacheConfig=<" + cacheConfig + ">");    
+String cacheName = (String) getVariableData("AccoCacheName");     
+System.out.println("***** Value of cacheName=<" + cacheName + ">");     
+String cacheKey = (String) getVariableData("AccoCacheKey");     
+System.out.println("***** Value of cacheKey=<" + cacheKey + ">");    
+String cacheEntry = (String) getVariableData("AccoCacheEntry");     
+System.out.println("***** Value of cacheEntry=<" + cacheEntry + ">");    
+     
+com.coxandkings.coherence.utils.CoherenceUtil.putInCache(cacheConfig, cacheName, cacheKey, cacheEntry);   
+   
+System.out.println("========================= Exiting Java Embedded Code CoherenceCachePut =========================");]]>
+                    </bpelx:exec>
+                </extensionActivity>
+            </sequence>
+            <else>
+                <documentation>
+                    <![CDATA[Do Not Store]]>
+                </documentation>
+                <empty name="Skip"/>
+            </else>
+        </if>
+    </sequence>
+</process>

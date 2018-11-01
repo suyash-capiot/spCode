@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:com="http://www.coxandkings.com/integ/suppl/common" xmlns="http://www.coxandkings.com/integ/suppl/cache/trigger"
+            targetNamespace="http://www.coxandkings.com/integ/suppl/cache/trigger" elementFormDefault="qualified">
+  <xsd:import namespace="http://www.coxandkings.com/integ/suppl/common" schemaLocation="SupplierCredentials.xsd"/>
+  
+  <xsd:complexType name="AccoCacheJobElementsType">
+      <xsd:sequence>
+          <xsd:element name="SupplierID" type="xsd:string"/>
+          <xsd:element name="CredentialName" type="xsd:string"/>
+          <xsd:element name="CountryCode" type="xsd:string"/>
+          <xsd:element name="CityCode" type="xsd:string"/>
+          <xsd:element name="JobSequence" type="xsd:long"/>
+          <xsd:element name="Rooms" type="xsd:short"/>
+          <xsd:element name="AdultGuests" type="xsd:short"/>
+          <xsd:element name="ChildGuests" type="xsd:short"/>
+          <xsd:element name="StartDate" type="xsd:string"/>
+          <xsd:element name="EndDate" type="xsd:string"/>
+      </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="AccoCacheJobTriggerMessage">
+      <xsd:complexType>
+          <xsd:sequence>
+              <xsd:element  name="SupplierCredentials" type="com:SupplierCredentialsType"/>
+              <xsd:element name="AccoCacheJobElements" type="AccoCacheJobElementsType"/>
+          </xsd:sequence>
+      </xsd:complexType>
+  </xsd:element>
+</xsd:schema>

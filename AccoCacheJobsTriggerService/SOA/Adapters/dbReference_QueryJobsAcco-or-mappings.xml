@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object-persistence xmlns="http://www.eclipse.org/eclipselink/xsds/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:eclipselink="http://www.eclipse.org/eclipselink/xsds/persistence" version="Eclipse Persistence Services - 2.6.1.v20150916-55dc7c3">
+   <name>dbReference_QueryJobsAcco-OR</name>
+   <class-mapping-descriptors>
+      <class-mapping-descriptor xsi:type="object-relational-class-mapping-descriptor">
+         <class>dbReference_QueryJobsAcco.Cachejobsacco</class>
+         <alias>CACHEJOBSACCO</alias>
+         <primary-key>
+            <field table="CACHEJOBSACCO" name="CITYCODE" xsi:type="column"/>
+            <field table="CACHEJOBSACCO" name="CREDNAME" xsi:type="column"/>
+            <field table="CACHEJOBSACCO" name="JOBSEQ" xsi:type="column"/>
+            <field table="CACHEJOBSACCO" name="SUPPID" xsi:type="column"/>
+         </primary-key>
+         <events/>
+         <querying>
+            <queries>
+               <query name="dbReference_QueryJobsAccoSelect" xsi:type="read-all-query">
+                  <arguments>
+                     <argument name="JobSeq">
+                        <type>java.lang.String</type>
+                     </argument>
+                     <argument name="RowCount">
+                        <type>java.lang.String</type>
+                     </argument>
+                  </arguments>
+                  <call xsi:type="sql-call">
+                     <sql>SELECT SuppID, CredName, CountryCode, CityCode, JobSeq, Rooms, AdultGuests, ChildGuests, StartDate, EndDate FROM (SELECT SuppID, CredName, CountryCode, CityCode, JobSeq, Rooms, AdultGuests, ChildGuests, StartDate, EndDate FROM CacheJobsAcco WHERE JobSeq > #JobSeq ORDER BY JobSeq) WHERE rownum &lt;= #RowCount</sql>
+                  </call>
+                  <reference-class>dbReference_QueryJobsAcco.Cachejobsacco</reference-class>
+                  <container xsi:type="list-container-policy">
+                     <collection-type>java.util.Vector</collection-type>
+                  </container>
+               </query>
+            </queries>
+         </querying>
+         <attribute-mappings>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>suppid</attribute-name>
+               <field table="CACHEJOBSACCO" name="SUPPID" xsi:type="column"/>
+               <attribute-classification>java.lang.String</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>credname</attribute-name>
+               <field table="CACHEJOBSACCO" name="CREDNAME" xsi:type="column"/>
+               <attribute-classification>java.lang.String</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>countrycode</attribute-name>
+               <field table="CACHEJOBSACCO" name="COUNTRYCODE" xsi:type="column"/>
+               <attribute-classification>java.lang.String</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>citycode</attribute-name>
+               <field table="CACHEJOBSACCO" name="CITYCODE" xsi:type="column"/>
+               <attribute-classification>java.lang.String</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>jobseq</attribute-name>
+               <field table="CACHEJOBSACCO" name="JOBSEQ" xsi:type="column"/>
+               <attribute-classification>java.math.BigDecimal</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>rooms</attribute-name>
+               <field table="CACHEJOBSACCO" name="ROOMS" xsi:type="column"/>
+               <attribute-classification>java.math.BigDecimal</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>adultguests</attribute-name>
+               <field table="CACHEJOBSACCO" name="ADULTGUESTS" xsi:type="column"/>
+               <attribute-classification>java.math.BigDecimal</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>childguests</attribute-name>
+               <field table="CACHEJOBSACCO" name="CHILDGUESTS" xsi:type="column"/>
+               <attribute-classification>java.math.BigDecimal</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>startdate</attribute-name>
+               <field table="CACHEJOBSACCO" name="STARTDATE" xsi:type="column"/>
+               <attribute-classification>java.sql.Timestamp</attribute-classification>
+            </attribute-mapping>
+            <attribute-mapping xsi:type="direct-mapping">
+               <attribute-name>enddate</attribute-name>
+               <field table="CACHEJOBSACCO" name="ENDDATE" xsi:type="column"/>
+               <attribute-classification>java.sql.Timestamp</attribute-classification>
+            </attribute-mapping>
+         </attribute-mappings>
+         <descriptor-type>independent</descriptor-type>
+         <caching>
+            <cache-type>weak-reference</cache-type>
+            <cache-size>-1</cache-size>
+            <always-refresh>true</always-refresh>
+         </caching>
+         <remote-caching>
+            <cache-type>weak-reference</cache-type>
+            <cache-size>-1</cache-size>
+         </remote-caching>
+         <instantiation/>
+         <copying xsi:type="instantiation-copy-policy"/>
+         <tables>
+            <table name="CACHEJOBSACCO"/>
+         </tables>
+         <structure>structureName</structure>
+      </class-mapping-descriptor>
+   </class-mapping-descriptors>
+   <login xsi:type="database-login">
+      <platform-class>org.eclipse.persistence.platform.database.oracle.Oracle9Platform</platform-class>
+      <connection-url></connection-url>
+   </login>
+</object-persistence>

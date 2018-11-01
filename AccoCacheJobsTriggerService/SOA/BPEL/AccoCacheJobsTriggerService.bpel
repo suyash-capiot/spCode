@@ -1,0 +1,258 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Thu Aug 04 14:01:08 IST 2016
+  Author:  spatanka
+  Type: BPEL 2.0 Process
+  Purpose: One Way BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="AccoCacheJobsTriggerService"
+               targetNamespace="http://www.coxandkings.com/integ/suppl/cache/trigger"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://www.coxandkings.com/integ/suppl/cache/trigger"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+               xmlns:ui="http://xmlns.oracle.com/soa/designer"
+               xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/db/CacheJobsApp/AccoCacheJobsTriggerService/dbReference_CallProcAcco"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/CacheJobsApp/AccoCacheJobsTriggerService/dbReference_QueryJobsAcco"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/db/top/dbReference_QueryJobsAcco"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
+         xmlns:ns4="http://xmlns.oracle.com/pcbpel/adapter/jms/CacheJobsApp/AccoCacheJobsTriggerService/jmsReference_CacheJobsAccoQueue"
+         xmlns:ns5="http://www.coxandkings.com/integ/suppl/cache/trigger" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+         xmlns:ns6="http://xmlns.oracle.com/pcbpel/adapter/db/sp/dbReference_CallProcAcco"
+         xmlns:ns7="http://xmlns.oracle.com/CacheJobsApp/AccoCacheJobsTriggerService/SupplierCredentialsServiceREST"
+         xmlns:ns8="http://www.coxandkings.com/integ/suppl/common">
+
+  <import ui:processWSDL="true" namespace="http://www.coxandkings.com/integ/suppl/cache/trigger"
+          location="../WSDLs/AccoCacheJobsTriggerService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="AccoCacheJobsTriggerService_Client" partnerLinkType="client:AccoCacheJobsTriggerService" myRole="AccoCacheJobsTriggerServiceProvider"/>
+    <partnerLink name="dbReference_CallProcAcco" partnerLinkType="ns1:dbReference_CallProcAcco_plt"
+                 partnerRole="dbReference_CallProcAcco_role"/>
+    <partnerLink name="dbReference_QueryJobsAcco" partnerLinkType="ns2:dbReference_QueryJobsAcco_plt"
+                 partnerRole="dbReference_QueryJobsAcco_role"/>
+    <partnerLink name="jmsReference_CacheJobsAccoQueue" partnerLinkType="ns4:AccoCacheJobTrigger_plt"
+                 partnerRole="AccoCacheJobTrigger_role"/>
+    <partnerLink name="SupplierCredentialsServiceREST" partnerLinkType="ns7:SupplierCredentialsServiceREST"
+                 partnerRole="SupplierCredentialsServiceRESTProvider"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:requestMessage"/>
+    <variable name="CallDBRefGenerateJobs_Input" messageType="ns1:args_in_msg"/>
+    <variable name="QueryAccoJobs_Input" messageType="ns2:dbReference_QueryJobsAccoSelect_inputParameters"/>
+    <variable name="QueryAccoJobs_Output" messageType="ns2:CachejobsaccoCollection_msg"/>
+    <variable name="LastJobSeq" type="xsd:long"/>
+    <variable name="SubsetRowCount" type="xsd:integer"/>
+    <variable name="LastSuppID" type="xsd:string"/>
+    <variable name="LastCredName" type="xsd:string"/>
+    <variable name="GetSupplierCredentials_Input" messageType="ns7:GetSupplierCredentials_inputMessage"/>
+    <variable name="GetSupplierCredentials_Output" messageType="ns7:GetSupplierCredentials_outputMessage"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in CacheJobsTriggerService.wsdl) -->
+    <receive name="receiveInput" partnerLink="AccoCacheJobsTriggerService_Client"
+             portType="client:AccoCacheJobsTriggerService_pt" operation="execute" variable="inputVariable" createInstance="yes"/>
+    <invoke name="CallStoredProcToGenerateJobs" partnerLink="dbReference_CallProcAcco"
+            portType="ns1:dbReference_CallProcAcco_ptt" operation="dbReference_CallProcAcco"
+            inputVariable="CallDBRefGenerateJobs_Input" bpelx:invokeAsDetail="no"/>
+    <assign name="InitializeVars">
+      <copy>
+        <from>0</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$LastJobSeq</to>
+      </copy>
+      <copy>
+        <from>''</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$LastSuppID</to>
+      </copy>
+      <copy>
+        <from>''</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$LastCredName</to>
+      </copy>
+      <copy>
+        <from>dvm:lookupValue('oramds:/apps/supplier/Accommodation/common/Configurations.dvm', 'Name', 'CacheJobsReadSubsetSize', 'Value', '100')</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$SubsetRowCount</to>
+      </copy>
+    </assign>
+    <repeatUntil name="RepeatUntil">
+      <sequence name="Sequence1">
+        <assign name="AssignJobSearchKeys">
+          <copy>
+            <from>$LastJobSeq</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$QueryAccoJobs_Input.dbReference_QueryJobsAccoSelect_inputParameters/ns3:JobSeq</to>
+          </copy>
+          <copy>
+            <from>$SubsetRowCount</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$QueryAccoJobs_Input.dbReference_QueryJobsAccoSelect_inputParameters/ns3:RowCount</to>
+          </copy>
+        </assign>
+        <invoke name="QueryAccoJobs" partnerLink="dbReference_QueryJobsAcco" portType="ns2:dbReference_QueryJobsAcco_ptt"
+                operation="dbReference_QueryJobsAccoSelect" inputVariable="QueryAccoJobs_Input"
+                outputVariable="QueryAccoJobs_Output" bpelx:invokeAsDetail="no"/>
+        <if name="IfRowsFound">
+          <documentation>
+            <![CDATA[Rows Found]]>
+          </documentation>
+          <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">count($QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco) &gt; 0</condition>
+          <sequence>
+            <forEach parallel="no" counterName="idx" name="ForEachJobRow">
+              <startCounterValue expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">1</startCounterValue>
+              <finalCounterValue expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">count($QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco)</finalCounterValue>
+              <scope name="Scope1">
+                <variables>
+                  <variable name="AccoCacheJobTrigger_JMSMessage_Input" messageType="ns4:AccoCacheJobTrigger_msg"/>
+                </variables>
+                <sequence name="Sequence2">
+                  <if name="IfKeyChanged">
+                    <documentation>
+                      <![CDATA[Changed]]>
+                    </documentation>
+                    <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:suppid != $LastSuppID or $QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:credname != $LastCredName</condition>
+                    <sequence name="Sequence3">
+                      <assign name="AssignGetSupplierCredentialsInput">
+                        <copy>
+                          <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:suppid</from>
+                          <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$LastSuppID</to>
+                        </copy>
+                        <copy>
+                          <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:credname</from>
+                          <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$LastCredName</to>
+                        </copy>
+                        <copy>
+                          <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:suppid</from>
+                          <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$GetSupplierCredentials_Input.request/ns8:SupplierID</to>
+                        </copy>
+                        <copy>
+                          <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:credname</from>
+                          <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$GetSupplierCredentials_Input.request/ns8:CredentialName</to>
+                        </copy>
+                      </assign>
+                      <invoke name="GetSupplierCredentials" partnerLink="SupplierCredentialsServiceREST"
+                              portType="ns7:SupplierCredentialsServiceREST_ptt" operation="GetSupplierCredentials"
+                              inputVariable="GetSupplierCredentials_Input"
+                              outputVariable="GetSupplierCredentials_Output" bpelx:invokeAsDetail="no">
+                        <bpelx:toProperties>
+                          <bpelx:toProperty name="rest.binding.requestURI">dvm:lookupValue('oramds:/apps/supplier/Accommodation/common/SuppOpIntURI.dvm', 'Operation', 'GetSupplierCredentials', 'OpURI', 'NOT_FOUND', 'SupplierID','ALL')</bpelx:toProperty>
+                        </bpelx:toProperties>
+                      </invoke>
+                    </sequence>
+                    <else>
+                      <documentation>
+                        <![CDATA[Not Changed]]>
+                      </documentation>
+                      <empty name="DoNothing"/>
+                    </else>
+                  </if>
+                  <assign name="AssignJMSMessageElements">
+                    <copy>
+                      <from>$GetSupplierCredentials_Output.reply/ns8:SupplierCredentials/ns8:SupplierID</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:SupplierCredentials/ns8:SupplierID</to>
+                    </copy>
+                    <copy>
+                      <from>$GetSupplierCredentials_Output.reply/ns8:SupplierCredentials/ns8:SearchType</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:SupplierCredentials/ns8:SearchType</to>
+                    </copy>
+                    <copy>
+                      <from>$GetSupplierCredentials_Output.reply/ns8:SupplierCredentials/ns8:Credentials</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:SupplierCredentials/ns8:Credentials</to>
+                    </copy>
+                    <copy>
+                      <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:suppid</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:SupplierID</to>
+                    </copy>
+                    <copy>
+                      <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:credname</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:CredentialName</to>
+                    </copy>
+                    <copy>
+                      <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:countrycode</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:CountryCode</to>
+                    </copy>
+                    <copy>
+                      <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:citycode</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:CityCode</to>
+                    </copy>
+                    <copy>
+                      <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:jobseq</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:JobSequence</to>
+                    </copy>
+                    <copy>
+                      <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:rooms</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:Rooms</to>
+                    </copy>
+                    <copy>
+                      <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:adultguests</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:AdultGuests</to>
+                    </copy>
+                    <copy>
+                      <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:childguests</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:ChildGuests</to>
+                    </copy>
+                    <copy>
+                      <from>xp20:format-dateTime($QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:startdate, '[Y0001]-[M01]-[D01]')</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:StartDate</to>
+                    </copy>
+                    <copy>
+                      <from>xp20:format-dateTime($QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[$idx]/ns3:enddate, '[Y0001]-[M01]-[D01]')</from>
+                      <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$AccoCacheJobTrigger_JMSMessage_Input.body/ns5:AccoCacheJobElements/ns5:EndDate</to>
+                    </copy>
+                  </assign>
+                  <invoke name="SendAccoJobTriggerJMSMessage" partnerLink="jmsReference_CacheJobsAccoQueue"
+                          portType="ns4:AccoCacheJobTrigger_ptt" operation="AccoCacheJobTrigger"
+                          inputVariable="AccoCacheJobTrigger_JMSMessage_Input" bpelx:invokeAsDetail="no"/>
+                </sequence>
+              </scope>
+            </forEach>
+            <assign name="SaveLastJobSequenceNumber">
+              <copy>
+                <from>$QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco[count($QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco)]/ns3:jobseq</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$LastJobSeq</to>
+              </copy>
+            </assign>
+          </sequence>
+        </if>
+      </sequence>
+      <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">count($QueryAccoJobs_Output.CachejobsaccoCollection/ns3:Cachejobsacco) &lt;= 0</condition>
+    </repeatUntil>
+  </sequence>
+</process>
