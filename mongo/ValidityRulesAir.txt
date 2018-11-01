@@ -1,0 +1,40 @@
+/* 1 */
+{
+    "_id" : ObjectId("596df40cfb93e1631dd027bd"),
+    "SupplierID" : "INDIGO",
+    "Market" : "India",
+    "Channel" : "web",
+    "ClientType" : "B2B",
+    "CabinClass" : "Economy",
+    "TripType" : "OneWay",
+    "Origin" : "BOM",
+    "Destination" : "DEL",
+    "FlightType" : "DOMESTIC",
+    "FlightNumber" : "ALL",
+    "Durations" : [ 
+        {
+            "DaysAfterFrom" : 0,
+            "DaysAfterTo" : 1,
+            "TTLDuration" : 120
+        }, 
+        {
+            "DaysAfterFrom" : 2,
+            "DaysAfterTo" : 5,
+            "TTLDuration" : 300
+        }, 
+        {
+            "DaysAfterFrom" : 6,
+            "DaysAfterTo" : 15,
+            "TTLDuration" : 1440
+        }, 
+        {
+            "DaysAfterFrom" : 16,
+            "DaysAfterTo" : 30,
+            "TTLDuration" : 2880
+        }, 
+        {
+            "DaysAfterFrom" : 31,
+            "TTLDuration" : 14400
+        }
+    ]
+}

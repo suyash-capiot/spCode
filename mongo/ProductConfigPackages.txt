@@ -1,0 +1,70 @@
+{
+    "_id" : "PACKAGES",
+    "CacheConfig" : "file:///C:/Oracle/Middleware/Oracle_Home/coherence/config/example-config.xml",
+    "CacheName" : "PackageCache",
+    "RetryCount" : 3,
+    "RetryDelay" : 5000,
+    "OperationKeyXPaths" : [ 
+        {
+            "Operation" : "search",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_DynamicPkgAvailRQ",
+            "Keys" : [ 
+                "/pac:PackagesBusinessServiceRQ/pac:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID", 
+                "/pac:PackagesBusinessServiceRQ/pac:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:Credentials/com:Credential/@name", 
+                "/pac:PackagesBusinessServiceRQ/pac:RequestBody/ns:OTA_DynamicPkgAvailRQ/ns:SearchCriteria/ns:PackageOptionSearch/ns:OptionSearchCriteria/ns:Criterion/ns:RefPoint/@Code", 
+                "/pac:PackagesBusinessServiceRQ/pac:RequestBody/ns:OTA_DynamicPkgAvailRQ/ns:SearchCriteria/ns:PackageOptionSearch/ns:OptionSearchCriteria/ns:Criterion/ns:OptionRef/@Code", 
+                "/pac:PackagesBusinessServiceRQ/pac:RequestBody/ns:OTA_DynamicPkgAvailRQ/ns:DynamicPackage/ns:Components/ns:PackageOptionComponent/@QuoteID"
+            ]
+        }
+    ],
+    "ValidityConfig" : {
+        "DefaultDuration" : 3600,
+        "DaysAfterElementXPath" : "/pac:PackagesBusinessServiceRQ/pac:RequestBody/ns:OTA_DynamicPkgAvailRQ/ns:DynamicPackage/<ns:Components",
+        "RulesCollection" : "ValidityRulesPackages",
+        "SearchResultsIterElementXPath" : "/pac:PackagesBusinessServiceRS/pac:ResponseBody/pac:OTA_DynamicPkgAvailRSWrapper/ota:OTA_DynamicPkgAvailRS/ota:DynamicPackage",
+        "ValidityKeys" : [ 
+            {
+                "Key" : "SupplierID",
+                "KeyAllowAll" : true,
+                "XPath" : "/pac:PackagesBusinessServiceRQ/pac:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID"
+            }, 
+            {
+                "Key" : "Market",
+                "KeyAllowAll" : true,
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "Channel",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "ClientType",
+                "XPath" : "pac:PackagesBusinessServiceRQ/pac:RequestBody/ns:OTA_DynamicPkgAvailRQ/ns:SearchCriteria/ns:PackageOptionSearch/ns:OptionSearchCriteria/ns:Criterion/ns:RefPoint/@Code"
+            }, 
+            {
+                "Key" : "CountryCode",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "CityCode",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "ProductName",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "ProductCategory",
+                "XPath" : "pac:PackagesBusinessServiceRQ/pac:RequestBody/ns:OTA_DynamicPkgAvailRQ/ns:SearchCriteria/ns:PackageOptionSearch/ns:OptionSearchCriteria/ns:Criterion/ns:OptionRef/@Code"
+            }, 
+            {
+                "Key" : "ProductType",
+                "XPath" : "pac:PackagesBusinessServiceRQ/pac:RequestBody/ns:OTA_DynamicPkgAvailRQ/ns:DynamicPackage/ns:Components/ns:PackageOptionComponent/@QuoteID"
+            }, 
+            {
+                "Key" : "DaysAfterRange",
+                "XPath" : ""
+            }
+        ]
+    }
+}

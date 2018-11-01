@@ -1,0 +1,61 @@
+{
+    "_id" : "CRUISE",
+    "CacheConfig" : "file:///C:/Oracle/Middleware/Oracle_Home/coherence/config/example-config.xml",
+    "CacheName" : "CruiseCache",
+    "RetryCount" : 3,
+    "RetryDelay" : 5000,
+    "OperationKeyXPaths" : [ 
+        {
+            "Operation" : "search",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_CruiseSailAvailRQ",
+            "Keys" : [ 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:Credentials/@name", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:SailingDateRange/@Start", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:SailingDateRange/@End", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:GuestCounts/ns:GuestCount[@Code = '10']/@Quantity", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:GuestCounts/ns:GuestCount[@Code = '08']/@Quantity", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:GuestCounts/ns:GuestCount[@Code = '07']/@Quantity"
+            ]
+        }, 
+        {
+            "Operation" : "reprice",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_CruiseSailAvailRQ",
+            "Keys" : [ 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/cru:SupplierID", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:Credentials/@name", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:OTA_CruisePriceBookingRQ/ns:SailingInfo/ns:SelectedSailing/ns:SailingDateRange/@Start", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:OTA_CruisePriceBookingRQ/ns:SailingInfo/ns:SelectedSailing/ns:SailingDateRange/@End", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:OTA_CruisePriceBookingRQ/ns:GuestCounts/ns:GuestCount[@Code='10']/@Quantity", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:OTA_CruisePriceBookingRQ/ns:GuestCounts/ns:GuestCount[@Code='08']/@Quantity", 
+                "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:OTA_CruisePriceBookingRQ/ns:GuestCounts/ns:GuestCount[@Code='07']/@Quantity"
+            ]
+        }
+    ],
+    "ValidityConfig" : {
+        "DefaultDuration" : 3600,
+        "DaysAfterElementXPath" : "/cru:CruiseBusinessServiceRQ/cru:RequestBody/ns:OTA_CruiseSailAvailRQ/ns:SailingDateRange/@Start",
+        "RulesCollection" : "ValidityRulescru",
+        "SearchResultsIterElementXPath" : "/tns:CruiseBusinessServiceRS/tns:ResponseBody/tns:OTA_CruiseSailAvailRSWrapper/vx:OTA_CruiseSailAvailRS/vx:SailingOptions",
+        "ValidityKeys" : [ 
+            {
+                "Key" : "SupplierID",
+                "KeyAllowAll" : true,
+                "XPath" : "/cru:CruiseBusinessServiceRQ/cru:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID"
+            }, 
+            {
+                "Key" : "Market",
+                "KeyAllowAll" : true,
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "Channel",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "ClientType",
+                "XPath" : ""
+            }
+        ]
+    }
+}

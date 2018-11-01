@@ -1,0 +1,79 @@
+{
+    "_id" : "TRANSFERS",
+    "CacheConfig" : "file:///C:/Oracle/Middleware/Oracle_Home/coherence/config/example-config.xml",
+    "CacheName" : "TransfersCache",
+    "RetryCount" : 3,
+    "RetryDelay" : 5000,
+    "OperationKeyXPaths" : [ 
+        {
+            "Operation" : "search",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_GroundAvailRQ",
+            "Keys" : [ 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/Credentials/@name", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Pickup/@LocationType", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Pickup/@LocationCode", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Pickup/@DateTime", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Dropoff/@LocationType", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Dropoff/@LocationCode", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Passengers/@Quantity"
+            ]
+        }, 
+        {
+            "Operation" : "reprice",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_GroundAvailRQ",
+            "Keys" : [ 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/Credentials/@name", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Pickup/@LocationType", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Pickup/@LocationCode", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Pickup/@DateTime", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Dropoff/@LocationType", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Service/ns:Dropoff/@LocationCode", 
+                "/ts:TransfersBusinessServiceRQ/ts:RequestBody/ns:OTA_GroundAvailRQ/ns:Passengers/@Quantity"
+            ]
+        }
+    ],
+    "ValidityConfig" : {
+        "DefaultDuration" : 3600,
+        "DaysAfterElementXPath" : "substring(/TransfersBusinessServiceRQ/RequestBody/OTA_GroundAvailRQ/Service/Pickup/@DateTime,1,10)",
+        "RulesCollection" : "ValidityRulesTransfer",
+        "SearchResultsIterElementXPath" : "",
+        "ValidityKeys" : [ 
+            {
+                "Key" : "SupplierID",
+                "KeyAllowAll" : true,
+                "XPath" : "/ts:TransfersBusinessServiceRQ/ts:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID"
+            }, 
+            {
+                "Key" : "Market",
+                "KeyAllowAll" : true,
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "Channel",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "ClientType",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "CountryCode",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "CityCode",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "Brand",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "DaysAfterRange",
+                "XPath" : ""
+            }
+        ]
+    }
+}

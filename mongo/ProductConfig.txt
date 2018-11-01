@@ -1,0 +1,195 @@
+/* 1 */
+{
+    "_id" : "AIR",
+    "CacheConfig" : "file:///D:/Temp/coherence/AirCacheConfigAdapter.xml",
+    "CacheName" : "AirCache",
+    "RetryCount" : 3,
+    "RetryDelay" : 5000,
+    "OperationKeyXPaths" : [ 
+        {
+            "Operation" : "search",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_AirLowFareSearchRQ",
+            "Keys" : [ 
+                "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID", 
+                "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:Credentials/@name", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:TravelerInfoSummary/ota:TPA_Extensions/air:TripType", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:TravelPreferences/ota:CabinPref/@Cabin", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:OriginDestinationInformation/ota:OriginLocation/@LocationCode", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:OriginDestinationInformation/ota:DestinationLocation/@LocationCode", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:OriginDestinationInformation/ota:DepartureDateTime", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:OriginDestinationInformation[2]/ota:DepartureDateTime", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:TravelerInfoSummary/ota:AirTravelerAvail[ota:PassengerTypeQuantity/@Code = 'ADT']/ota:PassengerTypeQuantity/@Quantity", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:TravelerInfoSummary/ota:AirTravelerAvail[ota:PassengerTypeQuantity/@Code = 'CHD']/ota:PassengerTypeQuantity/@Quantity", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:TravelerInfoSummary/ota:AirTravelerAvail[ota:PassengerTypeQuantity/@Code = 'INF']/ota:PassengerTypeQuantity/@Quantity"
+            ]
+        }, 
+        {
+            "Operation" : "reprice",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_AirPriceRQ",
+            "Keys" : [ 
+                "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID", 
+                "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:Credentials/@name", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:TravelerInfoSummary/ota:TPA_Extensions/air:TripType", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:TravelPreferences/ota:CabinPref/@Cabin", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:AirItinerary/ota:OriginDestinationOptions/ota:OriginDestinationOption/ota:FlightSegment/ota:DepartureAirport/@LocationCode", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:AirItinerary/ota:OriginDestinationOptions/ota:OriginDestinationOption/ota:FlightSegment/ota:ArrivalAirport/@LocationCode", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:AirItinerary/ota:OriginDestinationOptions/ota:OriginDestinationOption/ota:FlightSegment/@DepartureDateTime", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:AirItinerary/ota:OriginDestinationOptions/ota:OriginDestinationOption/ota:FlightSegment/@ArrivalDateTime", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:TravelerInfoSummary/ota:AirTravelerAvail[ota:PassengerTypeQuantity/@Code = 'ADT']/ota:PassengerTypeQuantity/@Quantity", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:TravelerInfoSummary/ota:AirTravelerAvail[ota:PassengerTypeQuantity/@Code = 'CHD']/ota:PassengerTypeQuantity/@Quantity", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirPriceRQ/ota:TravelerInfoSummary/ota:AirTravelerAvail[ota:PassengerTypeQuantity/@Code = 'INF']/ota:PassengerTypeQuantity/@Quantity"
+            ]
+        }
+    ],
+    "ValidityConfig" : {
+        "DefaultDuration" : 3600,
+        "DaysAfterElementXPath" : "substring(/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:OriginDestinationInformation/ota:DepartureDateTime,1,10)",
+        "RulesCollection" : "ValidityRulesAir",
+        "SearchResultsIterElementXPath" : "/air:AirBusinessServiceRS/air:ResponseBody/air:OTA_AirLowFareSearchRSWrapper/ota:OTA_AirLowFareSearchRS/ota:PricedItineraries/ota:PricedItinerary",
+        "ValidityKeys" : [ 
+            {
+                "Key" : "SupplierID",
+                "KeyAllowAll" : true,
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID"
+            }, 
+            {
+                "Key" : "Market",
+                "KeyAllowAll" : true,
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "Channel",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "ClientType",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "CabinClass",
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:TravelPreferences/ota:CabinPref/@Cabin"
+            }, 
+            {
+                "Key" : "TripType",
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:TravelerInfoSummary/ota:TPA_Extensions/air:TripType"
+            }, 
+            {
+                "Key" : "Origin",
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:OriginDestinationInformation/ota:OriginLocation/@LocationCode"
+            }, 
+            {
+                "Key" : "Destination",
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestBody/ota:OTA_AirLowFareSearchRQ/ota:OriginDestinationInformation/ota:DestinationLocation/@LocationCode"
+            }, 
+            {
+                "Key" : "FlightType",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "FlightNumber",
+                "XPath" : "trim(./ota:AirItinerary/ota:OriginDestinationOptions/ota:OriginDestinationOption/ota:FlightSegment/@FlightNumber)"
+            }
+        ]
+    }
+}
+
+/* 2 */
+{
+    "_id" : "COMMON",
+    "Handlers" : [ 
+        {
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/air",
+            "HandlerClass" : "com.coxandkings.travelogix.caching.handler.AirCacheHandler",
+            "CacheEntryClass" : "com.coxandkings.travelogix.caching.entry.AirCacheEntry"
+        }, 
+        {
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/acco",
+            "HandlerClass" : "com.coxandkings.travelogix.caching.handler.AccoCacheHandler",
+            "CacheEntryClass" : "com.coxandkings.travelogix.caching.entry.AccoCacheEntry"
+        }
+    ],
+    "NamespacesContext" : [ 
+        {
+            "Prefix" : "acco",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/acco"
+        }, 
+        {
+            "Prefix" : "acc",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/accointerface"
+        }, 
+        {
+            "Prefix" : "air",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/air"
+        }, 
+        {
+            "Prefix" : "com",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/common"
+        }, 
+        {
+            "Prefix" : "ota",
+            "NamespaceURI" : "http://www.opentravel.org/OTA/2003/05"
+        }, 
+        {
+            "Prefix" : "ns",
+            "NamespaceURI" : "http://www.opentravel.org/OTA/2003/05"
+        }, 
+        {
+            "Prefix" : "car",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/carrentals"
+        }, 
+        {
+            "Prefix" : "bus",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/bus"
+        }, 
+        {
+            "Prefix" : "sig",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/sightseeinginterface"
+        }, 
+        {
+            "Prefix" : "sig1",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/sightseeing"
+        }, 
+        {
+            "Prefix" : "rail",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/rail"
+        }, 
+        {
+            "Prefix" : "pac",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/packages"
+        }, 
+        {
+            "Prefix" : "pac1",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/packagesinterface"
+        }, 
+        {
+            "Prefix" : "cru",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/cruiseinterface"
+        }, 
+        {
+            "Prefix" : "cru1",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/cruise"
+        },
+		{
+            "Prefix" : "ts",
+            "NamespaceURI" : "http://www.coxandkings.com/integ/suppl/transfers"
+        }
+    ],
+    "TrackingElements" : [ 
+        {
+            "ElementName" : "SessionID",
+            "ElementXPath" : "./com:SessionID"
+        }, 
+        {
+            "ElementName" : "TransactionID",
+            "ElementXPath" : "./com:TransactionID"
+        }, 
+        {
+            "ElementName" : "UserID",
+            "ElementXPath" : "./com:UserID"
+        }, 
+        {
+            "ElementName" : "SupplierID",
+            "ElementXPath" : "./com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID"
+        }
+    ]
+}

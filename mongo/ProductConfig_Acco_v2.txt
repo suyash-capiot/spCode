@@ -1,0 +1,105 @@
+{
+    "_id" : "ACCO",
+    "CacheConfig" : "file:///D:/Oracle/Middleware/Oracle_Home/coherence/config/example-config.xml",
+    "CacheName" : "AccoCache",
+    "RetryCount" : 3,
+    "RetryDelay" : 5000,
+    "SearchResultsIterElementXPath" : "/acco:AccoBusinessServiceRS/acco:ResponseBody/ns:OTA_HotelAvailRS/ns:RoomStays/ns:RoomStay",
+    "OperationKeyXPaths" : [ 
+        {
+            "Operation" : "search",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_HotelAvailRQ",
+            "RQKeys" : [ 
+                {
+                    "Method" : "SupplierID",
+                    "Type" : "XpathString",
+                    "Value" : "/acco:AccoBusinessServiceRQ/acco:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials[1]/com:SupplierID"
+                }, 
+                {
+                    "Method" : "CredentialsName",
+                    "Type" : "XpathString",
+                    "Value" : "/acco:AccoBusinessServiceRQ/acco:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials[1]/com:Credentials/@name"
+                }, 
+                {
+                    "Method" : "CountryCode",
+                    "Type" : "XpathString",
+                    "Value" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ns:OTA_HotelAvailRQ/ns:AvailRequestSegments/ns:AvailRequestSegment/ns:HotelSearchCriteria/ns:Criterion/ns:RefPoint/@CountryCode"
+                }, 
+                {
+                    "Method" : "CityCode",
+                    "Type" : "XpathString",
+                    "Value" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ns:OTA_HotelAvailRQ/ns:AvailRequestSegments/ns:AvailRequestSegment/ns:HotelSearchCriteria/ns:Criterion/ns:HotelRef/@HotelCityCode"
+                }, 
+                {
+                    "Method" : "Date",
+                    "Type" : "XpathString",
+                    "Value" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ns:OTA_HotelAvailRQ/ns:AvailRequestSegments/ns:AvailRequestSegment/ns:HotelSearchCriteria/ns:Criterion/ns:StayDateRange/@Start"
+                }
+            ],
+            "RSKeystemp" : [ 
+                {
+                    "Method" : "RoomStay",
+                    "Type" : "Class",
+                    "Value" : "mywork.entry.acco.RoomStayComponent"
+                }
+            ],
+            "RSItrElem" : "/acco:AccoBusinessServiceRS/acco:ResponseBody/ns:OTA_HotelAvailRS/ns:RoomStays/ns:RoomStay",
+            "QueryString" : "SupplierID=:SupplierID AND CredentialsName=:CredentialsName AND CountryCode=:CountryCode AND CityCode=:CityCode AND Date in :Date",
+            "DateConfig" : {
+                "Method" : "Date",
+                "Type" : "DateRange",
+                "Value" : {
+                    "Start" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ns:OTA_HotelAvailRQ/ns:AvailRequestSegments/ns:AvailRequestSegment/ns:HotelSearchCriteria/ns:Criterion/ns:StayDateRange/@Start",
+                    "End" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ns:OTA_HotelAvailRQ/ns:AvailRequestSegments/ns:AvailRequestSegment/ns:HotelSearchCriteria/ns:Criterion/ns:StayDateRange/@End",
+                    "StartInclusive" : true,
+                    "EndInclusive" : false
+                }
+            }
+        }
+    ],
+    "ValidityConfig" : {
+        "DefaultDuration" : 3600,
+        "DaysAfterElementXPath" : "substring(/acco:AccoBusinessServiceRQ/acco:RequestBody/ota:OTA_HotelAvailRQ/ota:AvailRequestSegments/ota:AvailRequestSegment/ota:HotelSearchCriteria/ota:Criterion/ota:StayDateRange/@Start,1,10)",
+        "RulesCollection" : "ValidityRulesAcco",
+        "ValidityKeys" : [ 
+            {
+                "Key" : "supplierId",
+                "KeyAllowAll" : true,
+                "XPath" : "/acco:AccoBusinessServiceRQ/acco:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials[1]/com:SupplierID"
+            }, 
+            {
+                "Key" : "market",
+                "KeyAllowAll" : true,
+                "XPath" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ota:OTA_HotelAvailRQ/ota:POS/ota:Source/ota:TPA_Extensions/acco:Market"
+            }, 
+            {
+                "Key" : "channel",
+                "XPath" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ota:OTA_HotelAvailRQ/ota:POS/ota:Source/ota:BookingChannel/@Type"
+            }, 
+            {
+                "Key" : "clientType",
+                "XPath" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ota:OTA_HotelAvailRQ/ota:POS/ota:Source/ota:TPA_Extensions/acco:ClientType"
+            }, 
+            {
+                "Key" : "countryCode",
+                "XPath" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ns:OTA_HotelAvailRQ/ns:AvailRequestSegments/ns:AvailRequestSegment/ns:HotelSearchCriteria/ns:Criterion/ns:RefPoint/@CountryCode"
+            }, 
+            {
+                "Key" : "cityCode",
+                "XPath" : "/acco:AccoBusinessServiceRQ/acco:RequestBody/ota:OTA_HotelAvailRQ/ota:AvailRequestSegments/ota:AvailRequestSegment/ota:HotelSearchCriteria/ota:Criterion/ota:HotelRef/@HotelCityCode"
+            }, 
+            {
+                "Key" : "hotelCode",
+                "XPath" : "./ota:BasicPropertyInfo/@HotelCode"
+            }, 
+            {
+                "Key" : "starCategory",
+                "XPath" : "./ota:BasicPropertyInfo/ota:Award/@Rating"
+            }, 
+            {
+                "Key" : "roomType",
+                "XPath" : "concat(./ns:RoomTypes/ns:RoomType[1]/@RoomTypeCode,./ns:RoomTypes/ns:RoomType[1]/@RoomID)"
+            }
+        ]
+    }
+}

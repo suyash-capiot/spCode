@@ -1,0 +1,122 @@
+{
+    "_id" : "AIR",
+    "CacheConfig" : "file:///C:/Oracle/Middleware/Oracle_Home/coherence/config/example-config.xml",
+    "CacheName" : "AirCache",
+    "RetryCount" : 3,
+    "RetryDelay" : 5000,
+    "OperationKeyXPaths" : [ 
+        {
+            "Operation" : "search",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_AirLowFareSearchRQ",
+            "Keys" : [ 
+                "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID", 
+                "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:Credentials/@name", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:TravelerInfoSummary/ns:TPA_Extensions/air:TripType", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:OriginDestinationInformation/ns:OriginLocation/@LocationCode", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:OriginDestinationInformation/ns:DestinationLocation/@LocationCode", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:OriginDestinationInformation/ns:DepartureDateTime", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:OriginDestinationInformation[2]/ns:DepartureDateTime", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:TravelerInfoSummary/ns:AirTravelerAvail[ns:PassengerTypeQuantity/@Code = 'ADT']/ns:PassengerTypeQuantity/@Quantity", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:TravelerInfoSummary/ns:AirTravelerAvail[ns:PassengerTypeQuantity/@Code = 'CHD']/ns:PassengerTypeQuantity/@Quantity", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:TravelerInfoSummary/ns:AirTravelerAvail[ns:PassengerTypeQuantity/@Code = 'INF']/ns:PassengerTypeQuantity/@Quantity"
+            ]
+        }, 
+        {
+            "Operation" : "reprice",
+            "ElementQN" : "{http://www.opentravel.org/OTA/2003/05}OTA_AirPriceRQ",
+            "Keys" : [ 
+                "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID", 
+                "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:Credentials/@name", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirPriceRQ/ns:TravelerInfoSummary/ns:TPA_Extensions/air:TripType", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirPriceRQ/ns:AirItinerary/ns:OriginDestinationOptions/ns:OriginDestinationOption/ns:FlightSegment/ns:DepartureAirport/@LocationCode", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirPriceRQ/ns:AirItinerary/ns:OriginDestinationOptions/ns:OriginDestinationOption/ns:FlightSegment/ns:ArrivalAirport/@LocationCode", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirPriceRQ/ns:AirItinerary/ns:OriginDestinationOptions/ns:OriginDestinationOption/ns:FlightSegment/@DepartureDateTime", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirPriceRQ/ns:AirItinerary/ns:OriginDestinationOptions/ns:OriginDestinationOption[2]/ns:FlightSegment/@DepartureDateTime", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirPriceRQ/ns:TravelerInfoSummary/ns:AirTravelerAvail[ns:PassengerTypeQuantity/@Code = 'ADT']/ns:PassengerTypeQuantity/@Quantity", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirPriceRQ/ns:TravelerInfoSummary/ns:AirTravelerAvail[ns:PassengerTypeQuantity/@Code = 'CHD']/ns:PassengerTypeQuantity/@Quantity", 
+                "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirPriceRQ/ns:TravelerInfoSummary/ns:AirTravelerAvail[ns:PassengerTypeQuantity/@Code = 'INF']/ns:PassengerTypeQuantity/@Quantity"
+            ]
+        }
+    ],
+    "ValidityConfig" : {
+        "DefaultDuration" : 3600,
+        "DaysAfterElementXPath" : "substring(/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:OriginDestinationInformation/ns:DepartureDateTime,1,10)",
+        "RulesCollection" : "ValidityRulesAir",
+        "SearchResultsIterElementXPath" : "/air:AirBusinessServiceRS/air:ResponseBody/air:OTA_AirLowFareSearchRSWrapper/ns:OTA_AirLowFareSearchRS/ns:PricedItineraries/ns:PricedItinerary",
+        "ValidityKeys" : [ 
+            {
+                "Key" : "SupplierID",
+                "KeyAllowAll" : true,
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestHeader/com:SupplierCredentialsList/com:SupplierCredentials/com:SupplierID"
+            }, 
+            {
+                "Key" : "Market",
+                "KeyAllowAll" : true,
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "Channel",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "ClientType",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "CabinClass",
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:TravelPreferences/ns:CabinPref/@Cabin"
+            }, 
+            {
+                "Key" : "TripType",
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:TravelerInfoSummary/ns:TPA_Extensions/air:TripType"
+            }, 
+            {
+                "Key" : "Origin",
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:OriginDestinationInformation/ns:OriginLocation/@LocationCode"
+            }, 
+            {
+                "Key" : "Destination",
+                "XPath" : "/air:AirBusinessServiceRQ/air:RequestBody/ns:OTA_AirLowFareSearchRQ/ns:OriginDestinationInformation/ns:DestinationLocation/@LocationCode"
+            }, 
+            {
+                "Key" : "FlightType",
+                "XPath" : ""
+            }, 
+            {
+                "Key" : "FlightNumber",
+                "XPath" : "trim(./ns:AirItinerary/ns:OriginDestinationOptions/ns:OriginDestinationOption/ns:FlightSegment/@FlightNumber)"
+            }
+        ]
+    },
+    "SupplierPriceUpdater" : {
+        "RepeatSearchElemXpath" : "/air:AirBusinessServiceRS/air:ResponseBody/ns:OTA_AirLowFareSearchRS/ns:PricedItineraries/ns:PricedItinerary",
+        "RepeatPriceElemXpath" : "/air:AirBusinessServiceRS/air:ResponseBody/ns:OTA_AirPriceRS/ns:PricedItineraries/ns:PricedItinerary",
+        "CompareKeys" : [ 
+            {
+                "Supplier" : "DEFAULT",
+                "UpdaterClass" : "com.coxandkings.travelogix.caching.updater.AirSupplierPriceUpdater",
+                "Keys" : [ 
+                    {
+                        "KeyName" : "ExtendedRPH",
+                        "SearchElemXpath" : "/ns:PricedItinerary/ns:AirItinerary/ns:OriginDestinationOptions/ns:OriginDestinationOption[1]/ns:FlightSegment/ns:TPA_Extensions/air:ExtendedRPH",
+                        "PriceElemXpath" : "/ns:PricedItinerary/ns:AirItinerary/ns:OriginDestinationOptions/ns:OriginDestinationOption[1]/ns:FlightSegment/ns:TPA_Extensions/air:ExtendedRPH"
+                    }
+                ],
+                "ReplaceNodes" : [ 
+                    {
+                        "NodeName" : "TotalFare",
+                        "SearchNodeXpath" : "/ns:PricedItinerary/ns:AirItineraryPricingInfo",
+                        "PriceNodeXpath" : "/ns:PricedItinerary/ns:AirItineraryPricingInfo",
+                        "FareKeys" : [ 
+                            {
+                                "KeyName" : "Amount",
+                                "SearchElemXpath" : "/ns:AirItineraryPricingInfo/ns:ItinTotalFare/ns:TotalFare/@Amount",
+                                "PriceElemXpath" : "/ns:AirItineraryPricingInfo/ns:ItinTotalFare/ns:TotalFare/@Amount"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
