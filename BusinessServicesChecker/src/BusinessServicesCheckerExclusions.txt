@@ -1,0 +1,10 @@
+.*/Business/dbReference.bix
+.*/Business/.*BusinessService.bix
+.*/Business/.*InterfaceBS.bix
+.*/GetSessionBusinessService.bix
+.*/ReviewTripAdvisorCS/Business/StoreReviewDetails.bix
+.*/ReviewTripAdvisorCS/Business/StoreReviewerInfo.bix
+.*/ReviewTripAdvisorCS/CategoryAggregations.bix
+.*/ReviewTripAdvisor.*/InsertMappingData.bix
+.*/ReviewTripAdvisor.*/InsertToDB.bix
+.*/Static.*

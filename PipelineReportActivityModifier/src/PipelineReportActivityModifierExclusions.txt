@@ -1,0 +1,15 @@
+.*CreateSession.*
+.*GetSession.*
+.*InterfaceService/.*
+.*Login.*
+.*Logon.*
+.*LogoutSession.*
+.*/AccoDBCityToHotelCodesCS.*
+.*/AirTestSchemaValidationCS.*
+.*/GenericXRefPopulate.*
+.*/PayE.*
+.*/PayN.*
+.*/PayV.*
+.*/Review.*
+.*/Static.*
+.*/SupplierCredentialsMockService.*

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<adf-config xmlns="http://xmlns.oracle.com/adf/config" xmlns:adf="http://xmlns.oracle.com/adf/config/properties"
+            xmlns:sec="http://xmlns.oracle.com/adf/security/config">
+  <adf:adf-properties-child xmlns="http://xmlns.oracle.com/adf/config/properties">
+    <adf-property name="adfAppUID" value="TestRulesInMDS-2075"/>
+  </adf:adf-properties-child>
+  <sec:adf-security-child xmlns="http://xmlns.oracle.com/adf/security/config">
+    <CredentialStoreContext credentialStoreClass="oracle.adf.share.security.providers.jps.CSFCredentialStore"
+                            credentialStoreLocation="../../src/META-INF/jps-config.xml"/>
+  </sec:adf-security-child>
+  <adf-mds-config xmlns="http://xmlns.oracle.com/adf/mds/config">
+    <mds-config xmlns="http://xmlns.oracle.com/mds/config">
+      <persistence-config>
+        <metadata-namespaces>
+          <namespace path="/deployed-composites/default" metadata-store-usage="mstore-usage_1"/>
+        </metadata-namespaces>
+        <metadata-store-usages>
+          <metadata-store-usage id="mstore-usage_1">
+            <metadata-store class-name="oracle.mds.persistence.stores.db.DBMetadataStore">
+              <property name="partition-name" value="soa-infra"/>
+              <property name="jdbc-url" value="jdbc:oracle:thin:@10.24.3.100:1521/pdbqaorcl"/>
+              <property name="jdbc-userid" value="QA_MDS"/>
+              <property name="jdbc-password" value="Capiot321"/>
+            </metadata-store>
+          </metadata-store-usage>
+        </metadata-store-usages>
+      </persistence-config>
+	  
+      <file-type-config>
+        <file-types>
+          <file-type file-type-extension="bpel" contentType="STREAMED"/>
+          <file-type file-type-extension="rules" contentType="STREAMED"/>
+        </file-types>
+      </file-type-config>
+	  
+    </mds-config>
+  </adf-mds-config>
+</adf-config>
