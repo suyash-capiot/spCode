@@ -1,0 +1,65 @@
+<?xml version='1.0'?>
+
+-->
+<coherence  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://xmlns.oracle.com/coherence/coherence-operational-config"
+            xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-operational-config coherence-operational-config.xsd"
+            xml-override="{coherence.override /tangosol-coherence-override-{mode}.xml}">
+
+
+
+  <cluster-config>
+    <member-identity>
+      <!--
+      Note: All members of the cluster must specify the same cluster name in
+      order to be allowed to join the cluster.
+      -->
+      <cluster-name system-property="coherence.cluster">test</cluster-name>
+     
+    </member-identity>
+
+    <unicast-listener>
+    
+      <socket-provider system-property="coherence.socketprovider"/>
+
+      <reliable-transport system-property="coherence.transport.reliable"/>
+
+     
+      <well-known-addresses>
+        <address system-property="coherence.wka"></address>
+      </well-known-addresses>
+
+      <address system-property="coherence.localhost"></address>
+
+      <!--
+      Note: Specifying a port of zero will result in system assigned ephemeral port being used.
+      -->
+      <port system-property="coherence.localport">7171</port>
+      <port-auto-adjust system-property="coherence.localport.adjust">false</port-auto-adjust>
+      <priority>10</priority>
+    </unicast-listener>
+
+   
+  
+    <destination system-property="coherence.log">stderr</destination>
+    <logger-name system-property="coherence.log.logger"></logger-name>
+    <severity-level system-property="coherence.log.level">5</severity-level>
+    <message-format>{date}/{uptime} {product} {version} &lt;{level}&gt; (thread={thread}, member={member}): {text}</message-format>
+    <character-limit system-property="coherence.log.limit">1048576</character-limit>
+  </logging-config>
+
+  <configurable-cache-factory-config>
+  
+    <init-params>
+      <init-param>
+        <param-type>java.lang.String</param-type>
+        <param-value system-property="tango.coherence.cacheconfig">example-config.xml</param-value>
+      </init-param>
+    </init-params>
+  </configurable-cache-factory-config>
+
+  
+    <edition-name system-property="coherence.edition">GE</edition-name>
+    <license-mode system-property="coherence.mode">dev</license-mode>
+  </license-config>
+</coherence>

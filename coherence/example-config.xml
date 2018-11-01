@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE cache-config SYSTEM "cache-config.dtd">
+<cache-config>
+	<caching-scheme-mapping>
+		<cache-mapping>
+			<cache-name>test</cache-name>
+			<scheme-name>transactional</scheme-name>
+		</cache-mapping>
+	</caching-scheme-mapping>
+	<caching-schemes>
+		<transactional-scheme>
+			<scheme-name>transactional</scheme-name>
+			<service-name>SOAAdapterTransactionalCache</service-name>
+			<autostart>true</autostart>
+		</transactional-scheme>
+	</caching-schemes>
+</cache-config>

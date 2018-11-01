@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+<!-- Note: To add custom types, create a new 'pof- config.xml' file containing 
+	your custom user- type elements, and place it at the beginning of the class 
+	path. -->
+<pof-config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xmlns='http://xmlns.oracle.com/coherence/coherence-pof-config'
+	xsi:schemaLocation='http://xmlns.oracle.com/coherence/coherence-pof-config coherence-pof-config.xsd'>
+	<user-type-list>
+		<!-- by default just include coherence POF user types -->
+		<include>coherence-pof-config.xml</include>
+		<user-type>
+			<type-id>1001</type-id>
+			<class-name>com.coxandkings.travelogix.caching.entry.AirCacheEntry</class-name>
+			<serializer>
+				<class-name>com.tangosol.io.pof.PofAnnotationSerializer</class-name>
+				<init-params>
+					<init-param>
+						<param-type>int</param-type>
+						<param-value>{type-id}</param-value>
+					</init-param>
+					<init-param>
+						<param-type>class</param-type>
+						<param-value>{class}</param-value>
+					</init-param>
+					<init-param>
+						<param-type>boolean</param-type>
+						<param-value>true</param-value>
+					</init-param>
+				</init-params>
+			</serializer>
+		</user-type>
+	</user-type-list>
+</pof-config>

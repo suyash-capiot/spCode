@@ -1,0 +1,40 @@
+<?xml version='1.0'?>
+<coherence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://xmlns.oracle.com/coherence/coherence-operational-config"
+xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-operational-config coherence-operational-config.xsd">
+        <cluster-config>
+                <member-identity>
+                        <cluster-name>TravelogixCluster</cluster-name>
+                </member-identity>
+                <unicast-listener>
+                        <!--<socket-provider>tcp</socket-provider>-->
+                        <well-known-addresses>
+                                <socket-address id="1">
+                                        <address>10.25.6.180</address>
+                                        <port>11001</port>
+                                </socket-address>
+                                <socket-address id="2">
+                                        <address>10.25.6.181</address>
+                                        <port>11001</port>
+                                </socket-address>
+                                <socket-address id="3">
+                                        <address>10.25.6.140</address>
+                                        <port>11001</port>
+                                </socket-address>
+                        </well-known-addresses>
+                        <port>11001</port>
+                        <port-auto-adjust>true</port-auto-adjust>
+                </unicast-listener>
+        </cluster-config>
+        <configurable-cache-factory-config>
+                <init-params>
+                        <init-param>
+                                <param-type>java.lang.String</param-type>
+                                <param-value system-property="tangosol.coherence.cacheconfig">/opt/Oracle/Middleware/Oracle_Home/coherence/config/AccoCacheConfig.xml</param-value>
+                        </init-param>
+                </init-params>
+        </configurable-cache-factory-config>
+        <license-config>
+                <license-mode>prod</license-mode>
+        </license-config>
+</coherence>
